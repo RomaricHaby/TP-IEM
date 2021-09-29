@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "127639663219",
+    "project_id": "tp-iem",
+    "storage_bucket": "tp-iem.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:127639663219:android:d8c60531bab23dada13006",
+        "android_client_info": {
+          "package_name": "com.example.tp_iem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "127639663219-osbif15tbbm5dtae9j88ibl5mdq53nuq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqgrrj4pu5ob7d7_k1lnpDB3qeoKZpt0Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "127639663219-osbif15tbbm5dtae9j88ibl5mdq53nuq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
