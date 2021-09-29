@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class Characters {
+public class DataCharacterApi {
 
 
     @SerializedName("info")
@@ -14,7 +14,7 @@ public class Characters {
     private Info info;
     @SerializedName("results")
     @Expose
-    private List<ResultCharacter> resultCharacters = null;
+    private List<Character> characters = null;
 
     public Info getInfo() {
         return info;
@@ -24,12 +24,12 @@ public class Characters {
         this.info = info;
     }
 
-    public List<ResultCharacter> getResultCharacters() {
-        return resultCharacters;
+    public List<Character> getCharacters() {
+        return characters;
     }
 
-    public void setResultCharacters(List<ResultCharacter> resultCharacters) {
-        this.resultCharacters = resultCharacters;
+    public void setCharacters(List<Character> characters) {
+        this.characters = characters;
     }
 
 }

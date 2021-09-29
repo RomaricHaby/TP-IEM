@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">TP-IEM</string>
+
+
+    !-- BOTTOM NAVIGATION VIEW -->
+    <string name="bottom_navigation_menu_character">Character</string>
+    <string name="bottom_navigation_menu_location">Location</string>
+    <string name="bottom_navigation_menu_episode">Episode</string>
 </resources>
