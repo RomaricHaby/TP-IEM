@@ -8,8 +8,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tp_iem.Data.ApiInterface;
+import com.example.tp_iem.Modele.Character.Character;
 import com.example.tp_iem.Modele.Character.DataCharacterApi;
 import com.example.tp_iem.Modele.Location.DataLocationApi;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -72,6 +75,36 @@ public class CustomRecyclerView {
     //Request for charact with page
     public void     getCharacterCallback(){
         this.apiService.getCharacter(page).enqueue(new Callback<DataCharacterApi>() {
+
+            @Override
+            public void onResponse(@NonNull Call<DataCharacterApi> call, @NonNull Response<DataCharacterApi> response) {
+                //Init recycler view
+                if (getPage() == 1){
+                    if (response.body() != null) {
+                        setRecyclerViewCharacter(response.body());
+                    }
+                }
+                else{
+                    if (response.body() != null && getPage() != response.body().getInfo().getPages() + 1) {
+                        getCharacterAdapter().addData(response.body().getCharacters());
+                        getCharacterAdapter().notifyDataSetChanged();
+
+                    }
+                }
+                addPage();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<DataCharacterApi> call, @NonNull Throwable t) {
+                Log.e(TAG, "Throwable" + t);
+            }
+        });
+    }
+
+
+    //Request for charact with page
+    public void getCharacterFilter(String name){
+        this.apiService.getCharacterFilter(name).enqueue(new Callback<DataCharacterApi>() {
 
             @Override
             public void onResponse(@NonNull Call<DataCharacterApi> call, @NonNull Response<DataCharacterApi> response) {
@@ -163,6 +196,10 @@ public class CustomRecyclerView {
         this.type = type;
     }
 
+    public int getType() {
+        return type;
+    }
+
     public CharacterAdapter getCharacterAdapter() {
         return this.characterAdapter;
     }
@@ -177,5 +214,6 @@ public class CustomRecyclerView {
     public void setLocalisationAdapter(LocalisationAdapter localisationAdapter) {
         this.localisationAdapter = localisationAdapter;
     }
+
 
 }

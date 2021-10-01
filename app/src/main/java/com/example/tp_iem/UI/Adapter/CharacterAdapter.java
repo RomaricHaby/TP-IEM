@@ -41,6 +41,9 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapterViewH
         characterList.addAll(list);
     }
 
+    public List<Character> getCharacterList() {
+        return characterList;
+    }
 }
 
 

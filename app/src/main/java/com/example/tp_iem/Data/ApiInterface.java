@@ -18,4 +18,8 @@ public interface ApiInterface {
 
     @GET("character/")
     Call<DataCharacterApi> getCharacter(@Query("page") int page);
+
+
+    @GET("character/")
+    Call<DataCharacterApi> getCharacterFilter(@Query("name") String name);
 }
