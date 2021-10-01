@@ -1,27 +1,42 @@
 package com.example.tp_iem.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.tp_iem.Data.ApiClient;
 import com.example.tp_iem.Data.ApiInterface;
+import com.example.tp_iem.Modele.Character.Character;
 import com.example.tp_iem.Modele.Character.DataCharacterApi;
 import com.example.tp_iem.R;
 import com.example.tp_iem.UI.Adapter.CharacterAdapter;
+import com.example.tp_iem.UI.Adapter.CustomRecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private BottomNavigationView bottomNavigationView;
+    private ApiInterface apiService;
+
+    private ArrayList<Character>characterArrayList;
+
+    private CustomRecyclerView customRecyclerView;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,48 +48,18 @@ public class MainActivity extends AppCompatActivity {
 
         configureBottomView();
 
-        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-
-       /* apiService.getLocation().enqueue(new Callback<ResultLocation>() {
-            @Override
-            public void onResponse(Call<ResultLocation> call, Response<ResultLocation> response) {
-
-                Log.d("getLocation","Response = "+ response.toString());
+        apiService = ApiClient.getClient().create(ApiInterface.class);
 
 
-                Log.d("getLocation","Response = "+ response.body().getLocations().get(1).getDimension());
-
-            }
-
-            @Override
-            public void onFailure(Call<ResultLocation> call, Throwable t) {
-                Log.d("getLocation","Throwable = "+t.toString());
-
-            }
-        });*/
-
-        apiService.getCharacter().enqueue(new Callback<DataCharacterApi>() {
-            @Override
-            public void onResponse(Call<DataCharacterApi> call, Response<DataCharacterApi> response) {
-                setRecyclerView(response.body());
-            }
-
-            @Override
-            public void onFailure(Call<DataCharacterApi> call, Throwable t) {
-
-            }
-        });
-    }
-
-    public void setRecyclerView(DataCharacterApi dataCharacterApi){
         recyclerView = findViewById(R.id.recyclerViewCharacter);
 
-        // Create adapter passing in the sample user data
-        CharacterAdapter adapter = new CharacterAdapter(dataCharacterApi.getCharacters());
-        // Attach the adapter to the recyclerview to populate items
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        customRecyclerView = new CustomRecyclerView(recyclerView, apiService,this);
+
     }
+
+
+
 
 
     private void configureBottomView(){
@@ -106,4 +91,5 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         FirebaseAuth.getInstance().signOut();
     }
+
 }
