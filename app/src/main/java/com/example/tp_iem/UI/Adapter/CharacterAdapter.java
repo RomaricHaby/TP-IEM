@@ -13,7 +13,7 @@ import java.util.List;
 
 public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapterViewHolder>{
 
-    private List<Character> characterList;
+    private final List<Character> characterList;
 
     public CharacterAdapter(List<Character> characterList) {
         this.characterList = characterList;
@@ -29,7 +29,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapterViewH
 
     @Override
     public void onBindViewHolder(CharacterAdapterViewHolder viewHolder, int position) {
-        viewHolder.updateWithGithubUser(this.characterList.get(position));
+        viewHolder.updateCharacter(this.characterList.get(position));
     }
 
     @Override

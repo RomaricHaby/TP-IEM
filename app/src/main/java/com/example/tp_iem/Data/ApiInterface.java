@@ -14,7 +14,7 @@ public interface ApiInterface {
     @Headers("Content-Type: application/json")
 
     @GET("location/")
-    Call<DataLocationApi> getLocation();
+    Call<DataLocationApi> getLocation(@Query("page") int page);
 
     @GET("character/")
     Call<DataCharacterApi> getCharacter(@Query("page") int page);

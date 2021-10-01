@@ -1,7 +1,6 @@
 package com.example.tp_iem.UI.Adapter;
 
 import android.content.Context;
-import android.content.SearchRecentSuggestionsProvider;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -10,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tp_iem.Data.ApiInterface;
 import com.example.tp_iem.Modele.Character.DataCharacterApi;
+import com.example.tp_iem.Modele.Location.DataLocationApi;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,9 +21,12 @@ public class CustomRecyclerView {
     private final RecyclerView recyclerView;
     private final ApiInterface apiService;
     private final Context context;
-    private  CharacterAdapter adapter;
+    private  CharacterAdapter characterAdapter;
+    private  LocalisationAdapter localisationAdapter;
 
     private int page;
+    private int type;
+
 
 
     public CustomRecyclerView(RecyclerView recyclerView, ApiInterface apiService, Context context) {
@@ -33,24 +36,10 @@ public class CustomRecyclerView {
         this.page = 1;
 
         setRecyclerViewScroll();
-        getCharacterCallback();
     }
 
-    public int getPage() {
-        return page;
-    }
 
-    public void addPage() {
-        this.page++;
-    }
 
-    public CharacterAdapter getAdapter() {
-        return this.adapter;
-    }
-
-    public void setAdapter(CharacterAdapter adapter) {
-        this.adapter = adapter;
-    }
 
     //Scroll view
     public void setRecyclerViewScroll(){
@@ -60,14 +49,28 @@ public class CustomRecyclerView {
                 super.onScrollStateChanged(recyclerView, newState);
 
                 if (!recyclerView.canScrollVertically(1)) {
-                    getCharacterCallback();
+
+                    switch (type){
+                        case 1:
+                            getLocationCallback();
+                            break;
+                        case 2:
+                            getCharacterCallback();
+                            break;
+                        case 3:
+
+                            break;
+
+                    }
+
                 }
             }
         });
     }
 
+
     //Request for charact with page
-    public void getCharacterCallback(){
+    public void     getCharacterCallback(){
         this.apiService.getCharacter(page).enqueue(new Callback<DataCharacterApi>() {
 
             @Override
@@ -75,18 +78,16 @@ public class CustomRecyclerView {
                 //Init recycler view
                 if (getPage() == 1){
                     if (response.body() != null) {
-                        setRecyclerView(response.body());
+                        setRecyclerViewCharacter(response.body());
                     }
                 }
                 else{
-                    if (response.body() != null ) {
-                        if (response.body().getInfo().getNext() != null ){
-                            getAdapter().addData(response.body().getCharacters());
-                            getAdapter().notifyDataSetChanged();
-                        }
+                    if (response.body() != null && getPage() != response.body().getInfo().getPages() + 1) {
+                        getCharacterAdapter().addData(response.body().getCharacters());
+                        getCharacterAdapter().notifyDataSetChanged();
+
                     }
                 }
-
                 addPage();
             }
 
@@ -97,13 +98,84 @@ public class CustomRecyclerView {
         });
     }
 
+    //Request for location with page
+    public void getLocationCallback(){
+        this.apiService.getLocation(page).enqueue(new Callback<DataLocationApi>() {
+            @Override
+            public void onResponse(Call<DataLocationApi> call, Response<DataLocationApi> response) {
+                //Init recycler view
+                if (getPage() == 1){
+                    if (response.body() != null) {
+                        setRecyclerViewLocalisation(response.body());
+                    }
+                }
+                else{
+                    if (response.body() != null && getPage() != response.body().getInfoLocation().getPages() + 1) {
+                        getLocalisationAdapter().addData(response.body().getLocations());
+                        getLocalisationAdapter().notifyDataSetChanged();
+
+                    }
+                }
+                addPage();
+            }
+
+            @Override
+            public void onFailure(Call<DataLocationApi> call, Throwable t) {
+                Log.e(TAG, "Throwable" + t);
+            }
+        });
+    }
+
     //Init recycler view
-    private void setRecyclerView(DataCharacterApi dataCharacterApi){
+    private void setRecyclerViewCharacter(DataCharacterApi dataCharacterApi){
         // Create adapter passing in the sample user data
-        setAdapter(new CharacterAdapter(dataCharacterApi.getCharacters()));
+        setCharacterAdapter(new CharacterAdapter(dataCharacterApi.getCharacters()));
         // Attach the adapter to the recyclerview to populate items
-        this.recyclerView.setAdapter(getAdapter());
+        this.recyclerView.setAdapter(getCharacterAdapter());
         this.recyclerView.setLayoutManager(new LinearLayoutManager(context));
+    }
+
+    //Init recycler view
+    private void setRecyclerViewLocalisation(DataLocationApi dataLocationApi){
+        // Create adapter passing in the sample user data
+        setLocalisationAdapter(new LocalisationAdapter(dataLocationApi.getLocations()));
+        // Attach the adapter to the recyclerview to populate items
+        this.recyclerView.setAdapter(getLocalisationAdapter());
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(context));
+    }
+
+
+
+    // Get && set
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public void addPage() {
+        this.page++;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public CharacterAdapter getCharacterAdapter() {
+        return this.characterAdapter;
+    }
+    public void setCharacterAdapter(CharacterAdapter characterAdapter) {
+        this.characterAdapter = characterAdapter;
+    }
+
+    public LocalisationAdapter getLocalisationAdapter() {
+        return localisationAdapter;
+    }
+
+    public void setLocalisationAdapter(LocalisationAdapter localisationAdapter) {
+        this.localisationAdapter = localisationAdapter;
     }
 
 }

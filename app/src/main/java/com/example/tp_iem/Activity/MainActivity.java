@@ -1,43 +1,21 @@
 package com.example.tp_iem.Activity;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.example.tp_iem.Data.ApiClient;
 import com.example.tp_iem.Data.ApiInterface;
-import com.example.tp_iem.Modele.Character.Character;
-import com.example.tp_iem.Modele.Character.DataCharacterApi;
 import com.example.tp_iem.R;
-import com.example.tp_iem.UI.Adapter.CharacterAdapter;
 import com.example.tp_iem.UI.Adapter.CustomRecyclerView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.ArrayList;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
-    private BottomNavigationView bottomNavigationView;
     private ApiInterface apiService;
-
-    private ArrayList<Character>characterArrayList;
-
-    private CustomRecyclerView customRecyclerView;
-
-
-
+    private   CustomRecyclerView customRecyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,40 +23,52 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseAuth.getInstance().signOut();
 
-
-        configureBottomView();
-
         apiService = ApiClient.getClient().create(ApiInterface.class);
 
 
-        recyclerView = findViewById(R.id.recyclerViewCharacter);
+        // Bottom Navigation View
+        configureBottomView();
 
+        // Recycler View
+        setUpRecuclerView();
 
-        customRecyclerView = new CustomRecyclerView(recyclerView, apiService,this);
-
+        characterCallback();
     }
 
 
+    public void setUpRecuclerView(){
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        customRecyclerView = new CustomRecyclerView(recyclerView, apiService, this);
+    }
 
 
+    public void characterCallback(){
+        customRecyclerView.setPage(1);
+        customRecyclerView.setType(2);
+        customRecyclerView.getCharacterCallback();
+    }
 
+    public void locationCallback(){
+        customRecyclerView.setPage(1);
+        customRecyclerView.setType(1);
+        customRecyclerView.getLocationCallback();
+    }
     private void configureBottomView(){
-        bottomNavigationView = findViewById(R.id.bottomNavigationView);
-
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setItemIconTintList(null);
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> updateMainFragment(item.getItemId()));
+        bottomNavigationView.setSelectedItemId(R.id.action_character);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> updateActivityNav(item.getItemId()));
     }
 
-    private Boolean updateMainFragment(Integer integer){
+    private Boolean updateActivityNav(Integer integer){
         switch (integer) {
-            case R.id.action_android:
-
+            case R.id.action_location:
+                locationCallback();
                 break;
-            case R.id.action_logo:
-
+            case R.id.action_character:
+                characterCallback();
                 break;
-            case R.id.action_landscape:
+            case R.id.action_episode:
 
                 break;
         }
