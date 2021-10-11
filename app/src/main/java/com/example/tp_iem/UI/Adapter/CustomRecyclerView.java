@@ -2,6 +2,7 @@ package com.example.tp_iem.UI.Adapter;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,7 +31,7 @@ public class CustomRecyclerView {
     private int page;
     private int type;
 
-
+    private String nameCharacter;
 
     public CustomRecyclerView(RecyclerView recyclerView, ApiInterface apiService, Context context) {
         this.recyclerView = recyclerView;
@@ -52,20 +53,23 @@ public class CustomRecyclerView {
                 super.onScrollStateChanged(recyclerView, newState);
 
                 if (!recyclerView.canScrollVertically(1)) {
-
                     switch (type){
                         case 1:
                             getLocationCallback();
                             break;
                         case 2:
-                            getCharacterCallback();
+                            if (!nameCharacter.equals("")){
+                                getCharacterFilter();
+                            }
+                            else{
+                                getCharacterCallback();
+                            }
                             break;
                         case 3:
 
                             break;
 
                     }
-
                 }
             }
         });
@@ -73,7 +77,7 @@ public class CustomRecyclerView {
 
 
     //Request for charact with page
-    public void     getCharacterCallback(){
+    public void getCharacterCallback(){
         this.apiService.getCharacter(page).enqueue(new Callback<DataCharacterApi>() {
 
             @Override
@@ -103,22 +107,21 @@ public class CustomRecyclerView {
 
 
     //Request for charact with page
-    public void getCharacterFilter(String name){
-        this.apiService.getCharacterFilter(name).enqueue(new Callback<DataCharacterApi>() {
+    public void getCharacterFilter(){
+        this.apiService.getCharacterFilter(nameCharacter).enqueue(new Callback<DataCharacterApi>() {
 
             @Override
             public void onResponse(@NonNull Call<DataCharacterApi> call, @NonNull Response<DataCharacterApi> response) {
                 //Init recycler view
                 if (getPage() == 1){
                     if (response.body() != null) {
-                        setRecyclerViewCharacter(response.body());
-                    }
+                       setRecyclerViewCharacter(response.body());
+                    }                
                 }
                 else{
-                    if (response.body() != null && getPage() != response.body().getInfo().getPages() + 1) {
+                    if (response.body() != null && response.body().getInfo().getNext() != null) {
                         getCharacterAdapter().addData(response.body().getCharacters());
                         getCharacterAdapter().notifyDataSetChanged();
-
                     }
                 }
                 addPage();
@@ -216,4 +219,11 @@ public class CustomRecyclerView {
     }
 
 
+    public String getNameCharacter() {
+        return nameCharacter;
+    }
+
+    public void setNameCharacter(String nameCharacter) {
+        this.nameCharacter = nameCharacter;
+    }
 }

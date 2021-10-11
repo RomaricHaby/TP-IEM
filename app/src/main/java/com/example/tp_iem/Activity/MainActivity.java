@@ -60,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 customRecyclerView.setPage(1);
-                customRecyclerView.getCharacterFilter(search.getText().toString());
+                customRecyclerView.setNameCharacter(search.getText().toString());
+                customRecyclerView.getCharacterFilter();
             }
         });
     }
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
     public void characterCallback(){
         customRecyclerView.setPage(1);
         customRecyclerView.setType(2);
+        customRecyclerView.setNameCharacter("");
         customRecyclerView.getCharacterCallback();
     }
 
