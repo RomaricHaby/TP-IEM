@@ -1,6 +1,7 @@
 package com.example.tp_iem.Data;
 
 import com.example.tp_iem.Modele.Character.DataCharacterApi;
+import com.example.tp_iem.Modele.Episode.DataEpisodeApi;
 import com.example.tp_iem.Modele.Location.DataLocationApi;
 
 import retrofit2.Call;
@@ -19,7 +20,11 @@ public interface ApiInterface {
     @GET("character/")
     Call<DataCharacterApi> getCharacter(@Query("page") int page);
 
+    @GET("episode/")
+    Call<DataEpisodeApi> getEpisode(@Query("page") int page);
 
     @GET("character/")
     Call<DataCharacterApi> getCharacterFilter(@Query("name") String name);
+
+
 }

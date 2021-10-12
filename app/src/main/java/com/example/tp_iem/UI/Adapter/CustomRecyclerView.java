@@ -17,6 +17,7 @@ import com.example.tp_iem.Activity.MainActivity;
 import com.example.tp_iem.Data.ApiInterface;
 import com.example.tp_iem.Modele.Character.Character;
 import com.example.tp_iem.Modele.Character.DataCharacterApi;
+import com.example.tp_iem.Modele.Episode.DataEpisodeApi;
 import com.example.tp_iem.Modele.Location.DataLocationApi;
 import com.example.tp_iem.R;
 
@@ -34,6 +35,7 @@ public class CustomRecyclerView {
     private final Context context;
     private  CharacterAdapter characterAdapter;
     private  LocalisationAdapter localisationAdapter;
+    private EpisodeAdapter epidoseAdapter;
     private MainActivity activity;
 
     private int page;
@@ -49,7 +51,6 @@ public class CustomRecyclerView {
         this.activity = activity;
 
         setRecyclerViewScroll();
-
     }
 
 
@@ -74,7 +75,7 @@ public class CustomRecyclerView {
                             }
                             break;
                         case 3:
-
+                            getEpisodeCallback();
                             break;
 
                     }
@@ -141,6 +142,34 @@ public class CustomRecyclerView {
         });
     }
 
+    //Request for Episode
+    public void getEpisodeCallback(){
+        this.apiService.getEpisode(page).enqueue(new Callback<DataEpisodeApi>() {
+            @Override
+            public void onResponse(Call<DataEpisodeApi> call, Response<DataEpisodeApi> response) {
+                //Init recycler view
+                if (getPage() == 1){
+                    if (response.body() != null) {
+                        setRecyclerViewEpisode(response.body());
+                    }
+                }
+                else{
+                    if (response.body() != null && getPage() != response.body().getInfo().getPages() + 1) {
+                        getEpidoseAdapter().addData(response.body().getResults());
+                        getEpidoseAdapter().notifyDataSetChanged();
+
+                    }
+                }
+                addPage();
+            }
+
+            @Override
+            public void onFailure(Call<DataEpisodeApi> call, Throwable t) {
+
+            }
+        });
+    }
+
     //Request for location with page
     public void getLocationCallback(){
         this.apiService.getLocation(page).enqueue(new Callback<DataLocationApi>() {
@@ -187,6 +216,15 @@ public class CustomRecyclerView {
         this.recyclerView.setLayoutManager(new LinearLayoutManager(context));
     }
 
+    //Init recycler view
+    private void setRecyclerViewEpisode(DataEpisodeApi dataEpisodeApi){
+        // Create adapter passing in the sample user data
+        setEpidoseAdapter(new EpisodeAdapter(dataEpisodeApi.getResults()));
+        // Attach the adapter to the recyclerview to populate items
+        this.recyclerView.setAdapter(getEpidoseAdapter());
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(context));
+    }
+
 
 
     // Get && set
@@ -225,6 +263,14 @@ public class CustomRecyclerView {
     public void setLocalisationAdapter(LocalisationAdapter localisationAdapter) {
         this.localisationAdapter = localisationAdapter;
     }
+
+    public void setEpidoseAdapter(EpisodeAdapter epidoseAdapter) {
+        this.epidoseAdapter = epidoseAdapter;
+    }
+    public EpisodeAdapter getEpidoseAdapter() {
+        return epidoseAdapter;
+    }
+
 
     public String getNameCharacter() {
         return nameCharacter;
