@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/Applications/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material/icons/materialicons/search/baseline_search_24.xml" />
+                                      <entry key="url" value="file:$PROJECT_DIR$/../Library/Android/sdk/icons/material/materialicons/favorite/baseline_favorite_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,7 +28,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_baseline_search_24" />
+                            <entry key="color" value="ffffff" />
+                            <entry key="outputName" value="ic_baseline_not_favorite_24" />
                             <entry key="sourceFile" value="$PROJECT_DIR$/../Downloads/tv-screen.svg" />
                           </map>
                         </option>

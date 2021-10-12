@@ -1,23 +1,15 @@
 package com.example.tp_iem.UI.Adapter.ViewHolder;
 
-import android.annotation.SuppressLint;
+
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
-import android.graphics.Shader;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.tp_iem.Modele.Character.Character;
+import com.example.tp_iem.Modele.User;
 import com.example.tp_iem.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jakewharton.picasso.OkHttp3Downloader;
@@ -30,6 +22,7 @@ public class CharacterAdapterViewHolder extends RecyclerView.ViewHolder{
     private final TextView status;
     private final TextView species;
     private final TextView lastPosition;
+    private ImageView fav;
 
     private final FloatingActionButton buttonLife;
 
@@ -48,8 +41,10 @@ public class CharacterAdapterViewHolder extends RecyclerView.ViewHolder{
         species = itemView.findViewById(R.id.species_vh_character);
 
         lastPosition = itemView.findViewById(R.id.last_position_vh_character);
-    }
 
+        fav = itemView.findViewById(R.id.iv_favorite);
+
+    }
 
     public void updateCharacter(Character character){
         //Load picture
@@ -66,9 +61,10 @@ public class CharacterAdapterViewHolder extends RecyclerView.ViewHolder{
         species.setText(character.getSpecies());
         lastPosition.setText(character.getLocation().getName());
 
+        updateFav(character);
+
         switch (character.getStatus()){
             case "Alive":
-
                 buttonLife.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.life)));
                 break;
 
@@ -78,6 +74,15 @@ public class CharacterAdapterViewHolder extends RecyclerView.ViewHolder{
             default:
                 buttonLife.setBackgroundTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.unknow)));
                 break;
+        }
+    }
+
+    public void updateFav(Character character){
+        if(User.getInstance().isFav(character)){
+            fav.setImageResource(R.drawable.ic_baseline_favorite_24);
+        }
+        else{
+            fav.setImageResource(R.drawable.ic_baseline_not_favorite_24);
         }
     }
 }

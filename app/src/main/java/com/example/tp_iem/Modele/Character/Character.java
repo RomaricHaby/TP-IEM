@@ -4,9 +4,10 @@ import com.example.tp_iem.Modele.Location.Location;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Character {
+public class Character implements Serializable {
 
     @SerializedName("id")
     @Expose
@@ -141,4 +142,11 @@ public class Character {
         this.created = created;
     }
 
+    @Override
+    public String toString() {
+        return "Character{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

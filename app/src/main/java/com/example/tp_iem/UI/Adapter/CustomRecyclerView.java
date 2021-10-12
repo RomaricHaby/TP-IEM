@@ -1,17 +1,24 @@
 package com.example.tp_iem.UI.Adapter;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tp_iem.Activity.MainActivity;
 import com.example.tp_iem.Data.ApiInterface;
 import com.example.tp_iem.Modele.Character.Character;
 import com.example.tp_iem.Modele.Character.DataCharacterApi;
 import com.example.tp_iem.Modele.Location.DataLocationApi;
+import com.example.tp_iem.R;
 
 import java.util.List;
 
@@ -27,22 +34,23 @@ public class CustomRecyclerView {
     private final Context context;
     private  CharacterAdapter characterAdapter;
     private  LocalisationAdapter localisationAdapter;
+    private MainActivity activity;
 
     private int page;
     private int type;
 
     private String nameCharacter;
 
-    public CustomRecyclerView(RecyclerView recyclerView, ApiInterface apiService, Context context) {
+    public CustomRecyclerView(RecyclerView recyclerView, ApiInterface apiService, Context context, MainActivity activity) {
         this.recyclerView = recyclerView;
         this.apiService = apiService;
         this.context = context;
         this.page = 1;
+        this.activity = activity;
 
         setRecyclerViewScroll();
+
     }
-
-
 
 
     //Scroll view
@@ -74,7 +82,6 @@ public class CustomRecyclerView {
             }
         });
     }
-
 
     //Request for charact with page
     public void getCharacterCallback(){
@@ -165,7 +172,7 @@ public class CustomRecyclerView {
     //Init recycler view
     private void setRecyclerViewCharacter(DataCharacterApi dataCharacterApi){
         // Create adapter passing in the sample user data
-        setCharacterAdapter(new CharacterAdapter(dataCharacterApi.getCharacters()));
+        setCharacterAdapter(new CharacterAdapter(dataCharacterApi.getCharacters(), activity));
         // Attach the adapter to the recyclerview to populate items
         this.recyclerView.setAdapter(getCharacterAdapter());
         this.recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -206,6 +213,7 @@ public class CustomRecyclerView {
     public CharacterAdapter getCharacterAdapter() {
         return this.characterAdapter;
     }
+
     public void setCharacterAdapter(CharacterAdapter characterAdapter) {
         this.characterAdapter = characterAdapter;
     }
@@ -217,7 +225,6 @@ public class CustomRecyclerView {
     public void setLocalisationAdapter(LocalisationAdapter localisationAdapter) {
         this.localisationAdapter = localisationAdapter;
     }
-
 
     public String getNameCharacter() {
         return nameCharacter;
